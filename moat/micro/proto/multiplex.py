@@ -158,8 +158,8 @@ class _LocalCommand(BaseCmd):
     """
 
     async def dispatch(self, action, msg):
-        if not isinstance(action, (tuple, list)) or len(action) <= 1:
-            raise RuntimeError("local/* calls require the path to be a list")
+        if not isinstance(action, (tuple, list)) or len(action) == 0:
+            raise RuntimeError(f"local/* calls require the path to be a list, not {repr(action)}")
         p = self.parent
         for a in action[:-1]:
             p = getattr(p, "dis_" + a)
