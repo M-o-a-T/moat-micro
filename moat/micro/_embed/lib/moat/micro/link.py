@@ -6,6 +6,7 @@ from moat.util import OptCtx  # pylint:disable=no-name-in-module
 
 from moat.micro.compat import (  # pylint: disable=redefined-builtin,no-name-in-module
     Event,
+    every_ms,
     TimeoutError,
     idle,
     wait_for_ms,
@@ -17,24 +18,50 @@ class Reader:
     Base class for something that reads data.
 
     The "send" method forwards to the other side.
+
+    Config::
+        - link: name of the data item
+        - t_send: time between messages
     """
 
     _link = None
     __cmd = None
+    _t_send = None
+    _res = None
 
     def __init__(self, cfg, **_kw):
+        self.cfg = cfg
         self._link = cfg.get("link", None)
+        self._t_send = cfg.get("t_send", None)
 
     async def run(self, cmd):
         "background worker"
+        self.__cmd = cmd
         reg = cmd.base.register(self, cmd.name, self._link) if self._link is not None else None
         with OptCtx(reg):
-            await idle()
+            td = self.cfg.get("t_send", None)
+            if td:
+                async for _ in every_ms(td, self._ras):
+                    pass
+            else:
+                await idle()
+
+    async def _ras(self):
+        "read-and-send, called periodically. Uses cache if available"
+        r = self._res
+        if r is None:
+            r = await self.read_()
+        else:
+            self._res = None
+        await self.send(r)
 
     async def read(self):
-        "read-and-send"
+        "read and maybe-send, called externally. Not cached"
         res = await self.read_()
-        await self.send(res)
+        if self._t_send:
+            self._res = res
+        else:
+            await self.send(res)
         return res
 
     async def read_(self):
