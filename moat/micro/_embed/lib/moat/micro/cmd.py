@@ -37,7 +37,7 @@ from moat.util import (  # pylint: disable=no-name-in-module
     obj2name,
 )
 
-from moat.micro.compat import CancelledError, TaskGroup, WouldBlock, idle, print_exc
+from moat.micro.compat import CancelledError, TaskGroup, WouldBlock, idle, print_exc, Event
 from moat.micro.proto.stack import RemoteError, SilentRemoteError, _Stacked
 
 as_proxy("_KyErr", KeyError, replace=True)
@@ -510,12 +510,19 @@ class RootCmd(BaseCmd):
         if b.obj is not None:
             raise RuntimeError(f"{b.obj} already registered on {o}")
         b.obj = obj
+        if b._evt is not None:
+            b._evt.set()
+            b._evt = None
         return b
 
 
 class RemBroadcaster(Broadcaster):
     "A broadcaster that reads from an object"
     obj = None
+    _evt = None
+
+    def __repr__(self):
+        return f"{super().__repr__()} o={repr(self.obj)} e={'Y' if self._evt else 'N'}"
 
     def __enter__(self):
         return self
@@ -525,4 +532,8 @@ class RemBroadcaster(Broadcaster):
 
     async def read(self):
         "read data"
+        if self.obj is None:
+            if self._evt is None:
+                self._evt = Event()
+            await self._evt.wait()
         return await self.obj.read_()
