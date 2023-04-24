@@ -47,7 +47,8 @@ class Reader:
             return
         if self.__cmd is None:
             return
-        await self.__cmd.send_nr("s", o=(self.__cmd.name, self._link), d=msg)
+
+        await self.__cmd.request.send_nr("s", o=(self.__cmd.name, self._link), d=msg)
 
 
 class Listener(Reader):
