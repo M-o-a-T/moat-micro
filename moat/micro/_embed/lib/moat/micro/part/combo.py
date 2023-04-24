@@ -95,35 +95,44 @@ class Subtract(Reader):
         return p - n
 
 
-class Multiply(Reader):
+class MultiplyDict(Reader):
     """
-    Measure/aggregate data by multiplying two readouts.
+    Measure/aggregate data by multiplying two (or more) readouts.
 
     Useful e.g. for power (separate channels for U and I).
 
-    Returns a dict with u,i,p.
+    Returns a dict with all input values; the product is stored as the key '_'.
     """
 
     def __init__(self, cfg, **kw):
         super().__init__(cfg, **kw)
-        self.rdr_u = load_from_cfg(cfg.u)
-        self.rdr_i = load_from_cfg(cfg.u)
+        self.sub = cfg.sub
+        self.rdr = {}
+        for k in self.sub:
+            self.rdr[k] = load_from_cfg(cfg[k])
 
     async def read_(self):
-        now_u = None
-        now_i = None
+        res = {}
 
         async with TaskGroup() as tg:
 
-            async def rd_u():
-                nonlocal now_u
-                now_u = await self.rdr_u.read()
+            async def rd(k):
+                res[k] = await self.rdr[k].read()
 
-            async def rd_i():
-                nonlocal now_i
-                now_i = await self.rdr_i.read()
+            for k in self.sub:
+                tg.start_soon(rd, k)
 
-            tg.start_soon(rd_u)
-            tg.start_soon(rd_i)
+        r = 1
+        for v in res.values():
+            r *= v
+        res["_"] = v
+        return res
 
-        return dict(u=now_u, i=now_i, p=now_u * now_i)
+
+class Multiply(MultiplyDict):
+    "A multiplier that returns just the result"
+
+    async def read_(self):
+        "returns just the product"
+        res = await super().read_()
+        return res["_"]
