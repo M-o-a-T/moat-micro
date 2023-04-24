@@ -1,7 +1,7 @@
 import usys
 from uasyncio.queues import Queue, QueueEmpty, QueueFull
 
-from moat.micro.compat import Event
+from moat.util.compat import Event
 
 
 class NotGiven:

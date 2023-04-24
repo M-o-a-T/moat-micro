@@ -24,8 +24,8 @@ from moat.util import (
     yprint,
 )
 from moat.util.main import load_subgroup
+from moat.util.compat import TaskGroup, idle
 
-from .compat import TaskGroup, idle
 from .direct import DirectREPL
 
 logger = logging.getLogger(__name__)

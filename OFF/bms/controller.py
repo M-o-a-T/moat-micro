@@ -12,7 +12,7 @@ from moat.dbus import DbusInterface, DbusName
 from moat.util import ValueEvent, attrdict, combine_dict
 from victron.dbus.utils import wrap_dbus_dict
 
-from moat.micro.compat import (
+from moat.util.compat import (
     CancelledError,
     Event,
     Lock,

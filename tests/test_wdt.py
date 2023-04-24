@@ -3,9 +3,9 @@ Basic test using a MicroPython subtask
 """
 import pytest
 from moat.util import NotGiven
+from moat.util.compat import sleep_ms
 
 from moat.micro._test import mpy_client, mpy_server
-from moat.micro.compat import sleep_ms
 
 pytestmark = pytest.mark.anyio
 

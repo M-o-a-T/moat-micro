@@ -8,7 +8,7 @@
 
 import usys
 
-from ..compat import TaskGroup
+from moat.util.compat import TaskGroup
 
 # Basic infrastructure to run an RPC system via an unreliable,
 # possibly-reordering, and/or stream-based transport

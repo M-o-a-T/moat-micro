@@ -8,7 +8,7 @@ from moat.lib.victron.dbus import Dbus
 from moat.util import Queue, attrdict
 
 from moat.micro.app import BaseAppCmd
-from moat.micro.compat import Event, TaskGroup, sleep_ms, ticks_add, ticks_diff, ticks_ms
+from moat.util.compat import Event, TaskGroup, sleep_ms, ticks_add, ticks_diff, ticks_ms
 
 from .. import BaseAppCmd
 

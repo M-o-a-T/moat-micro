@@ -21,9 +21,10 @@ import sys
 
 import machine
 
+from moat.util.compat import Event, TimeoutError, wait_for_ms
+
 import moat.micro.main as M
 from moat.micro.cmd import BaseCmd
-from moat.micro.compat import Event, TimeoutError, wait_for_ms
 
 try:
     _reset = machine.reset

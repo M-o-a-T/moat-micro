@@ -3,8 +3,8 @@ import sys
 
 import anyio
 from moat.util.queue import Queue
+from moat.util.compat import AnyioMoatStream, TaskGroup
 
-from ..compat import AnyioMoatStream, TaskGroup
 from ..main import Request
 from ..proto.stack import Logger
 from ..proto.stream import MsgpackStream

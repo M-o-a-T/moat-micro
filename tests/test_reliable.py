@@ -5,8 +5,9 @@ Test reliable retransmission, using various parameters.
 import anyio
 import pytest
 
+from moat.util.compat import TaskGroup
+
 from moat.micro._test import Loop
-from moat.micro.compat import TaskGroup
 from moat.micro.proto.reliable import Reliable
 from moat.micro.proto.stack import Logger, _Stacked
 

@@ -11,10 +11,11 @@ from pathlib import Path
 import anyio
 from anyio_serial import Serial
 from moat.util import NotGiven, attrdict
+from moat.util.compat import Event, TaskGroup
 
 from moat.micro.cmd import BaseCmd
 from moat.micro.cmd import Request as BaseRequest
-from moat.micro.compat import AnyioMoatStream, Event, TaskGroup
+from moat.micro.compat import AnyioMoatStream
 from moat.micro.stacks.console import console_stack
 
 logger = logging.getLogger(__name__)

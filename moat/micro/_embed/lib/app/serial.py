@@ -1,8 +1,9 @@
 import machine as M
 from serialpacker import SerialPacker
 
+from moat.util.compat import Event, Lock, TimeoutError, wait_for_ms
+
 from moat.micro.cmd import BaseCmd
-from moat.micro.compat import Event, Lock, TimeoutError, wait_for_ms
 from moat.micro.proto.stream import AsyncStream
 
 

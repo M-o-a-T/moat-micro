@@ -3,8 +3,8 @@ Test the relay implementation
 """
 import pytest
 from moat.util import attrdict
+from moat.util.compat import TaskGroup, sleep_ms
 
-from moat.micro.compat import TaskGroup, sleep_ms
 from moat.micro.part.fake import PINS
 from moat.micro.part.relay import Relay
 

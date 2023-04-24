@@ -2,8 +2,9 @@ import sys
 
 from uasyncio.queues import Queue
 
+from moat.util.compat import Event, TaskGroup, print_exc, run_server
+
 from ..cmd import Request
-from ..compat import Event, TaskGroup, print_exc, run_server
 from ..proto.stream import AIOStream, MsgpackStream
 
 

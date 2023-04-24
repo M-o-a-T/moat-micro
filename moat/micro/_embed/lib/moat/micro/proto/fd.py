@@ -11,7 +11,7 @@ _read = C.func("i", "read", "ipi")
 _write = C.func("i", "write", "iPi")
 _end = None
 
-from moat.micro.compat import Lock
+from moat.util.compat import Lock
 
 
 def _rdq(s):  # async

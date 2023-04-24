@@ -2,8 +2,7 @@ import sys
 from functools import partial
 
 from moat.util import NoProxyError, NotGiven, as_proxy, name2obj, obj2name
-
-from moat.micro.compat import Lock, TimeoutError, wait_for_ms
+from moat.util.compat import Lock, TimeoutError, wait_for_ms
 
 try:
     from moat.util import Proxy, get_proxy

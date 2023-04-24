@@ -1,7 +1,7 @@
 import sys
 
-from ...util import NotGiven, Queue, ValueEvent
-from ..compat import (
+from moat.util import NotGiven, Queue, ValueEvent
+from moat.util.compat import (
     Event,
     TaskGroup,
     TimeoutError,

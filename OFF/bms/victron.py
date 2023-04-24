@@ -7,7 +7,7 @@ from moat.cmd import BaseCmd
 from moat.util import Queue, attrdict
 from victron.dbus import Dbus
 
-from moat.micro.compat import Event, TaskGroup, sleep_ms, ticks_add, ticks_diff, ticks_ms, idle
+from moat.util.compat import Event, TaskGroup, sleep_ms, ticks_add, ticks_diff, ticks_ms, idle
 
 logger = logging.getLogger(__name__)
 

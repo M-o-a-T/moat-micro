@@ -7,7 +7,7 @@ from moat.dbus import DbusInterface
 from moat.util import Path, attrdict, combine_dict
 from victron.dbus.utils import wrap_dbus_dict, wrap_dbus_value
 
-from moat.micro.compat import sleep, idle
+from moat.util.compat import sleep, idle
 
 from .packet import *
 

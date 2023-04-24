@@ -5,7 +5,7 @@ import time
 
 import pytest
 
-from moat.micro.compat import every_ms
+from moat.util.compat import every_ms
 
 
 @pytest.mark.anyio

@@ -12,8 +12,8 @@ from random import random
 
 import anyio
 from moat.util import attrdict, merge, packer, yload
+from moat.util.compat import TaskGroup
 
-from moat.micro.compat import TaskGroup
 from moat.micro.main import Request, get_link, get_link_serial
 from moat.micro.proto.multiplex import Multiplexer
 from moat.micro.proto.stack import _Stacked

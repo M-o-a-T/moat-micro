@@ -14,10 +14,10 @@ from pprint import pformat
 
 import anyio
 from moat.util import attrdict, merge, obj2name, to_attrdict
+from moat.util.compat import Event, TaskGroup
 
 from ..app._base import ConfigError
 from ..cmd import BaseCmd, RootCmd
-from ..compat import Event, TaskGroup
 from ..main import ClientBaseCmd, Request
 from ..stacks.unix import unix_stack_iter
 from .stack import RemoteError, SilentRemoteError

@@ -24,6 +24,10 @@ class BrokenResourceError(Exception):
     pass
 
 
+class ClosedResourceError(Exception):
+    pass
+
+
 try:
     from machine import Pin
 except ImportError:  # µPy on Linux

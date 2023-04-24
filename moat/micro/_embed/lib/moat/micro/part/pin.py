@@ -4,7 +4,7 @@ Module for pins
 import machine as M
 import uasyncio
 
-from moat.micro.compat import idle
+from moat.util.compat import idle
 
 try:
     sup = M.Pin

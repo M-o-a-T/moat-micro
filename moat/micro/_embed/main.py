@@ -92,7 +92,7 @@ def go_moat(state=None, fake_end=True, log=False):
         fallback = True
 
     print("Start MoaT:", state, file=usys.stderr)
-    from moat.micro.compat import print_exc
+    from moat.util.compat import print_exc
     from moat.micro.main import main
 
     cfg = "moat_fb.cfg" if fallback else "moat.cfg"
