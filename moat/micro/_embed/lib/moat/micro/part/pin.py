@@ -3,7 +3,6 @@ Module for pins
 """
 import machine as M
 import uasyncio
-
 from moat.util.compat import idle
 
 try:

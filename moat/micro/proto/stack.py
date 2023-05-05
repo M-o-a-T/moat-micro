@@ -8,7 +8,6 @@
 import logging
 
 from moat.util import as_proxy
-
 from moat.util.compat import BrokenResourceError, EndOfStream, TaskGroup
 
 logger = logging.getLogger(__name__)

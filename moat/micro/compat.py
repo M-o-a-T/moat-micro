@@ -6,6 +6,7 @@ Well, for the most part.
 """
 import anyio as _anyio
 
+
 class AnyioMoatStream:
     """
     Adapts an anyio stream to MoaT

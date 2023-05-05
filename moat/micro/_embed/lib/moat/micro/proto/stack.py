@@ -7,7 +7,6 @@
 # and not understanding anyio exceptions.
 
 import usys
-
 from moat.util.compat import TaskGroup
 
 # Basic infrastructure to run an RPC system via an unreliable,

@@ -101,14 +101,17 @@ def every_ms(t, p, *a, **k):
 def every(t, p, *a, **k):
     return every_ms(t * 1000, p, *a, **k)
 
+
 if DEBUG:
-    async def _catch(p,*a,**k):
+
+    async def _catch(p, *a, **k):
         try:
-            return await p(*a,**k)
+            return await p(*a, **k)
         except Exception as exc:
             print("Error:", repr(exc), file=usys.stderr)
             print_exc(exc)
             raise
+
 
 class TaskGroup(_tg):
     async def spawn(self, p, *a, _name=None, **k):

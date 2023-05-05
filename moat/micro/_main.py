@@ -23,8 +23,8 @@ from moat.util import (
     yload,
     yprint,
 )
-from moat.util.main import load_subgroup
 from moat.util.compat import TaskGroup, idle
+from moat.util.main import load_subgroup
 
 from .direct import DirectREPL
 

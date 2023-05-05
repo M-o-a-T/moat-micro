@@ -3,7 +3,6 @@ import gc
 import machine
 import uos
 import usys
-
 from moat.util import NotGiven, drop_proxy
 from moat.util.compat import TaskGroup, sleep_ms, ticks_diff, ticks_ms
 

@@ -20,7 +20,6 @@ Config options:
 import sys
 
 import machine
-
 from moat.util.compat import Event, TimeoutError, wait_for_ms
 
 import moat.micro.main as M

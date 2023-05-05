@@ -20,10 +20,9 @@ There is one main "wdt" option which
 import sys
 
 import machine
-
+from moat.micro.wdt import WDT, M
 from moat.util.compat import Event, TimeoutError, wait_for_ms
 
-from moat.micro.wdt import WDT, M
 from moat.micro.cmd import BaseCmd
 
 

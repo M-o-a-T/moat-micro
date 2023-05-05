@@ -13,6 +13,7 @@ from moat.util.compat import (
     ticks_ms,
     wait_for_ms,
 )
+
 from .stack import ChannelClosed, _Stacked
 
 

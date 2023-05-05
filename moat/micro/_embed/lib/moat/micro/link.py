@@ -5,8 +5,8 @@ Helper to hot-wire a command to read data from/to the other side.
 from moat.util import OptCtx  # pylint:disable=no-name-in-module
 from moat.util.compat import (  # pylint: disable=redefined-builtin,no-name-in-module
     Event,
-    every_ms,
     TimeoutError,
+    every_ms,
     idle,
     wait_for_ms,
 )

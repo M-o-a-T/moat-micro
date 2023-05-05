@@ -36,8 +36,7 @@ from moat.util import (  # pylint: disable=no-name-in-module
     import_,
     obj2name,
 )
-
-from moat.util.compat import CancelledError, TaskGroup, WouldBlock, idle, print_exc, Event
+from moat.util.compat import CancelledError, Event, TaskGroup, WouldBlock, idle, print_exc
 
 from moat.micro.proto.stack import RemoteError, SilentRemoteError, _Stacked
 

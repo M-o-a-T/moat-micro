@@ -4,7 +4,6 @@ Test the "every" iterator
 import time
 
 import pytest
-
 from moat.util.compat import every_ms
 
 

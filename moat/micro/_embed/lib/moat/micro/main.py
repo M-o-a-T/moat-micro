@@ -11,9 +11,9 @@ WDT = None
 
 def main(state=None, fake_end=True, log=False, fallback=False, cfg=cfg):
     import uos
-
     from moat.util import import_
     from moat.util.compat import Event, TaskGroup, print_exc, sleep_ms
+
     from .base import StdBase
 
     if isinstance(cfg, str):

@@ -1,7 +1,6 @@
 import usys
-from uasyncio.queues import Queue, QueueEmpty, QueueFull
-
 from moat.util.compat import Event
+from uasyncio.queues import Queue, QueueEmpty, QueueFull
 
 
 class NotGiven:
@@ -256,5 +255,5 @@ def drop_proxy(p):
     del _RProxy[id(r)]
 
 
-from .broadcast import *
 from .alert import *
+from .broadcast import *
