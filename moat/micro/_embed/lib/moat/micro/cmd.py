@@ -510,6 +510,8 @@ class RootCmd(BaseCmd):
         if b.obj is not None:
             raise RuntimeError(f"{b.obj} already registered on {o}")
         b.obj = obj
+
+        # pylint:disable=protected-access
         if b._evt is not None:
             b._evt.set()
             b._evt = None
