@@ -21,6 +21,11 @@ from pyfuse3 import (  # pylint: disable=E0611
     FUSEError,
 )
 
+try:
+    BaseExceptionGroup
+except NameError:
+    from exceptiongroup import BaseExceptionGroup
+
 logger = logging.getLogger(__name__)
 
 as_proxy("_FnErr", FileNotFoundError, replace=True)
@@ -793,10 +798,26 @@ async def wrap(link, path, blocksize=0, debug=1):
 
     logger.debug('Entering main loop..')
     async with anyio.create_task_group() as tg:
+
+        async def fuse_main():
+            try:
+                await pyfuse3.main()
+            except anyio.get_cancelled_exc_class():
+                pyfuse3.close(unmount=True)
+                raise
+            except BaseExceptionGroup as exc:
+                exc = exc.split(anyio.get_cancelled_exc_class())[1]
+                pyfuse3.close(unmount=exc is None)
+                raise
+            except BaseException as exc:
+                pyfuse3.close(unmount=False)
+                raise
+            else:
+                pyfuse3.close(unmount=True)
+
         try:
-            tg.start_soon(pyfuse3.main)  # pylint: disable=I1101
+            tg.start_soon(fuse_main)  # pylint: disable=I1101
             yield None
 
         finally:
-            pyfuse3.close(unmount=True)  # pylint: disable=I1101  # was False but we don't continue
             tg.cancel_scope.cancel()
