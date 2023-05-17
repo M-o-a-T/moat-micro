@@ -75,7 +75,7 @@ dependencies = [
   "anyio ~= 3.0",
   "msgpack",
   "serialpacker",
-  "pyfuse3",
+  "pyfuse3 >= 3.2",
   "moat-util ~= 0.33.1",
   "moat-main",
 ]
