@@ -44,7 +44,7 @@ def print_exc(a, b=usys.stderr):
     usys.print_exception(a, b)
 
 
-from moat.util import NotGiven
+from . import NotGiven
 
 
 class LostData(ValueError):

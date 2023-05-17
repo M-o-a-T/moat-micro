@@ -150,6 +150,6 @@ def main(state=None, fake_end=True, log=False, fallback=False, cfg=cfg):
 
             pass  # end of taskgroup
 
-    from moat.micro.compat import run
+    from moat.util.compat import run
 
     run(_main)
