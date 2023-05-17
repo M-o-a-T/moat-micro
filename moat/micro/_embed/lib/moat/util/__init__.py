@@ -1,8 +1,9 @@
 import usys
+from moat.util.compat import Event
 from uasyncio.queues import Queue, QueueEmpty, QueueFull
+
 from .impl import NotGiven
 
-from moat.util.compat import Event
 
 class NoProxyError(ValueError):
     pass

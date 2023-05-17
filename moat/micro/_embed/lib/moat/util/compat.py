@@ -44,7 +44,7 @@ def print_exc(a, b=usys.stderr):
     usys.print_exception(a, b)
 
 
-from . import NotGiven
+from .impl import NotGiven
 
 
 class LostData(ValueError):

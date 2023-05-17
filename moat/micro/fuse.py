@@ -22,9 +22,9 @@ from pyfuse3 import (  # pylint: disable=E0611
 )
 
 try:
-    BaseExceptionGroup
+    BaseExceptionGroup  # pylint:disable=used-before-assignment
 except NameError:
-    from exceptiongroup import BaseExceptionGroup
+    from exceptiongroup import BaseExceptionGroup  # pylint:disable=redefined-builtin
 
 logger = logging.getLogger(__name__)
 
@@ -802,19 +802,20 @@ async def wrap(link, path, blocksize=0, debug=1):
 
         async def fuse_main():
             try:
-                await pyfuse3.main()
+                await pyfuse3.main()  # pylint:disable=c-extension-no-member
             except anyio.get_cancelled_exc_class():
-                pyfuse3.close(unmount=True)
+                pyfuse3.close(unmount=True)  # pylint:disable=c-extension-no-member
                 raise
             except BaseExceptionGroup as exc:
+                # pylint:disable=unsubscriptable-object,c-extension-no-member
                 exc = exc.split(anyio.get_cancelled_exc_class())[1]
                 pyfuse3.close(unmount=exc is None)
                 raise
-            except BaseException as exc:
-                pyfuse3.close(unmount=False)
+            except BaseException:
+                pyfuse3.close(unmount=False)  # pylint:disable=c-extension-no-member
                 raise
             else:
-                pyfuse3.close(unmount=True)
+                pyfuse3.close(unmount=True)  # pylint:disable=c-extension-no-member
 
         try:
             tg.start_soon(fuse_main)  # pylint: disable=I1101

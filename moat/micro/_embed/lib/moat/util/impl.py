@@ -9,4 +9,3 @@ class NotGiven:
 
     def __str__(self):
         return "NotGiven"
-
