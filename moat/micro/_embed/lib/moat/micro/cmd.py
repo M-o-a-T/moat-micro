@@ -28,7 +28,6 @@ may fail.
 import sys
 
 from moat.util import (  # pylint: disable=no-name-in-module
-    Broadcaster,
     Queue,
     ValueEvent,
     as_proxy,
@@ -36,6 +35,7 @@ from moat.util import (  # pylint: disable=no-name-in-module
     import_,
     obj2name,
 )
+from moat.util.broadcast import Broadcaster
 from moat.util.compat import CancelledError, Event, TaskGroup, WouldBlock, idle, print_exc
 
 from moat.micro.proto.stack import RemoteError, SilentRemoteError, _Stacked
