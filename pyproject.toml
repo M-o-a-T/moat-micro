@@ -74,7 +74,7 @@ keywords = ["MoaT"]
 dependencies = [
   "anyio ~= 3.0",
   "msgpack",
-  "serialpacker",
+  "serialpacker >= 0.10.3",
   "pyfuse3 >= 3.2",
   "moat-util ~= 0.35.0",
   "moat-main",
