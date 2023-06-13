@@ -125,7 +125,7 @@ class MultiplyDict(Reader):
         r = 1
         for v in res.values():
             r *= v
-        res["_"] = v
+        res["_"] = r
         return res
 
 
