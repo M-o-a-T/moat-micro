@@ -1,1 +1,0 @@
-../_embed/lib/moat/micro/stacks/console.py

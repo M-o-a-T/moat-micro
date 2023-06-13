@@ -67,7 +67,7 @@ def main(state=None, fake_end=True, log=False, fallback=False, cfg=cfg):
         # no_exit = cfg.get("console",{}).get("no_exit",no_exit)
         # network
         async def run_network(port):
-            from moat.micro.stacks.net import network_stack
+            from moat.micro.proto.net import network_stack
 
             async def cb(t, b):
                 t = t.stack(StdBase, fallback=fallback, state=state, cfg=cfg)
@@ -82,7 +82,7 @@ def main(state=None, fake_end=True, log=False, fallback=False, cfg=cfg):
         async def run_console(force_write=False):
             import micropython
 
-            from moat.micro.stacks.console import console_stack
+            from moat.micro.proto.console import console_stack
 
             micropython.kbd_intr(-1)
             try:
