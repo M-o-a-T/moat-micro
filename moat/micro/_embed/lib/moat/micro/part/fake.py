@@ -44,7 +44,7 @@ class PIN:
         await self.flag.wait()
         return self._value
 
-    async def run(self, cmd):
+    async def run(self):
         pass
 
     async def get(self):
@@ -79,7 +79,7 @@ class ADC(Reader):
 
         seed = cfg.seed if "seed" in cfg else random.random()
 
-        self.val = 0
+        self.val = cfg.init if "init" in cfg else 0
         self.bias = 0
         self.rand = random.Random(cfg.seed if "seed" in cfg else None)
 

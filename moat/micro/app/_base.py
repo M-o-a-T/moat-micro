@@ -12,9 +12,8 @@ class ConfigError(RuntimeError):
 class BaseApp:
     "App"
 
-    def __init__(self, name, cfg, gcfg):
+    def __init__(self, name, cfg):
         self.cfg = cfg
-        self.gcfg = gcfg
         self.name = name
 
     async def config_updated(self, cfg):
@@ -25,8 +24,6 @@ class BaseApp:
 class BaseAppCmd(BaseCmd):
     "App-specific command"
 
-    def __init__(self, parent, name, cfg, gcfg):
-        super().__init__(parent)
-        self.name = name
+    def __init__(self, parent, name, cfg):
+        super().__init__(parent, name)
         self.cfg = cfg
-        self.gcfg = gcfg

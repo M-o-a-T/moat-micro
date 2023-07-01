@@ -120,8 +120,8 @@ class MultiplexCommand(RootCmd):
         super().__init__(parent)
 
         self.cfg = cfg
-        self.dis_mplex = _MplexCommand(self)
-        self.dis_local = _LocalCommand(self)
+        self.dis_mplex = _MplexCommand(self, name="mplex")
+        self.dis_local = _LocalCommand(self, name="local")
 
     def cmd_link(self, s):
         self.request._process_link(s)
@@ -163,7 +163,10 @@ class _LocalCommand(BaseCmd):
         p = self.parent
         for a in action[:-1]:
             p = getattr(p, "dis_" + a)
-        p = getattr(p, "loc_" + action[-1])
+        try:
+            p = getattr(p, "loc_" + action[-1])
+        except AttributeError:
+            p = getattr(p, "dis_" + action[-1]).cmd
 
         if isinstance(msg, dict):
             r = p(**msg)
@@ -186,8 +189,8 @@ class Command(BaseCmd):
 class Multiplexer(Request):
     """
     This is the server-side multiplexer object. It connects to the embedded
-    system via a TCP socket. It offers a Unix socket for client programs,
-    including FUSE mounts.
+    system via a TCP socket or a serial MoaT link and offers a Unix socket
+    for client programs.
 
     Unix socket paths are relative to XDG_RUNTIME_DIR if they don't start
     with a slash.

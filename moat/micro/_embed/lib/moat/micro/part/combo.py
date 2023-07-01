@@ -7,6 +7,7 @@ from moat.util.compat import TaskGroup
 
 from moat.micro.link import Reader
 
+import sys
 
 class Array(Reader):
     """
@@ -22,13 +23,13 @@ class Array(Reader):
     PARTS = "parts"
     ATTR = None  # if the part isn't a dict
 
-    def __init__(self, cfg, **kw):
-        super().__init__(cfg, **kw)
+    def __init__(self, parent, name, cfg, **kw):
+        super().__init__(parnet, name, cfg, **kw)
 
         self.parts = []
 
         std = cfg.get("default", {})
-        for p in cfg[self.PARTS]:
+        for i,p in enumerate(cfg[self.PARTS]):
             if not isinstance(p, dict):
                 if self.ATTR is None:
                     raise ValueError(p)
@@ -36,13 +37,7 @@ class Array(Reader):
             for k, v in std.items():
                 p.setdefault(k, v)
 
-            self.parts.append(load_from_cfg(p, _raise=True, **kw))
-
-    async def run(self, cmd):
-        "Start the parts' background tasks"
-        async with TaskGroup() as tg:
-            for p in self.parts:
-                await tg.spawn(p.run, cmd)
+            self.parts.append(load_from_cfg(self, str(i), cfg=p, _raise=True, **kw))
 
     async def read(self):
         """
@@ -65,7 +60,8 @@ class Subtract(Reader):
     A generic reader that returns a relative value.
     """
 
-    def __init__(self, cfg, **kw):
+    def __init__(self, parent, name, cfg, **kw):
+        super().__init__(parent, name, cfg, **kw)
         pin = cfg.pin
         ref = cfg.ref
         if not isinstance(ref, dict):
@@ -74,13 +70,8 @@ class Subtract(Reader):
         for k, v in pin.items():
             ref.setdefault(k, v)
 
-        self.pos = load_from_cfg(pin, **kw)
-        self.neg = load_from_cfg(ref, **kw)
-
-    async def run(self, cmd):
-        async with TaskGroup() as tg:
-            await tg.spawn(self.pos.run, cmd)
-            await tg.spawn(self.neg.run, cmd)
+        self.pos = load_from_cfg(self, "p", cfg=pin, **kw)
+        self.neg = load_from_cfg(self, "n", cfg=ref, **kw)
 
     async def read_(self):
         p = n = None
@@ -104,12 +95,13 @@ class MultiplyDict(Reader):
     Returns a dict with all input values; the product is stored as the key '_'.
     """
 
-    def __init__(self, cfg, **kw):
-        super().__init__(cfg, **kw)
+    def __init__(self, parent, name, cfg, **kw):
+        super().__init__(parent, name, cfg, **kw)
         self.sub = cfg.sub
         self.rdr = {}
         for k in self.sub:
-            self.rdr[k] = load_from_cfg(cfg[k])
+            self.rdr[k] = load_from_cfg(self, k, cfg=cfg[k])
+        print("III", id(self), self.sub, self.rdr, file=sys.stderr)
 
     async def read_(self):
         res = {}
@@ -117,7 +109,11 @@ class MultiplyDict(Reader):
         async with TaskGroup() as tg:
 
             async def rd(k):
-                res[k] = await self.rdr[k].read()
+                try:
+                    res[k] = await self.rdr[k].read()
+                except Exception:
+                    print("EEE", id(self), k, self.sub, self.rdr, file=sys.stderr)
+                    raise
 
             for k in self.sub:
                 tg.start_soon(rd, k)

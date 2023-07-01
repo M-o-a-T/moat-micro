@@ -1,4 +1,5 @@
-import usys
+import sys
+
 from moat.util.compat import Event
 from uasyncio.queues import Queue, QueueEmpty, QueueFull
 
@@ -144,7 +145,7 @@ def import_(name, off=0):
     return res
 
 
-def load_from_cfg(cfg, *a, _raise=False, **k):
+def load_from_cfg(*a, _cfg=None, _raise=False, **k):
     """
     A simple frontend to load a module, access a class/object from it,
     and call that with the config (and whichever other arguments you want to
@@ -152,12 +153,18 @@ def load_from_cfg(cfg, *a, _raise=False, **k):
 
     The module+object name is the "client" attribute.
     """
+    if _cfg is None:
+        cfg = k["cfg"]
     if "client" not in cfg:
         if _raise:
             raise ValueError("must be configured")
         return None
     m = import_(cfg.client, off=1)
-    return m(cfg, *a, **k)
+    try:
+        return m(*a, **k)
+    except TypeError as exc:
+        print(exc, cfg.client, a,k,file=sys.stderr)
+        raise
 
 
 # packing

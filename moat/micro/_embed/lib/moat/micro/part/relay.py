@@ -1,6 +1,8 @@
 """
 More common code
 """
+import sys
+
 from moat.util import NotGiven, attrdict, load_from_cfg
 from moat.util.compat import Event, Pin_OUT, TaskGroup, idle, sleep, sleep_ms, ticks_diff, ticks_ms
 
@@ -21,15 +23,14 @@ class Relay(Reader):
     value = None
     force = None
 
-    def __init__(self, cfg, value=None, force=None, **kw):
-        super().__init__(cfg)
+    def __init__(self, parent, name, cfg, value=None, force=None, **kw):
+        super().__init__(parent, name, cfg=cfg)
         pin = cfg.pin
         if isinstance(pin, int):
             cfg.pin = attrdict(client="moat.micro.part.pin.Pin", pin=pin)
         kw.setdefault("mode", Pin_OUT)
-        self.pin = load_from_cfg(cfg.pin, **kw)
-        if self.pin is None:
-            raise ImportError(cfg.pin)
+        self.pin = load_from_cfg(cfg=cfg.pin, _raise=True, **kw)
+        print("PIN",self.pin,self.path,cfg.pin,file=sys.stderr)
         self.t = [cfg.get("t_off", 0), cfg.get("t_on", 0)]
         self.note = cfg.get("note", None)
 
@@ -102,9 +103,7 @@ class Relay(Reader):
             d=None if self._delay is None else ticks_diff(ticks_ms(), self.t_last),
         )
 
-    async def run(self, cmd):
-        async with TaskGroup() as self.__tg:
-            await self.set()
-            await self.read()
-            self.__tg.start_soon(super().run, cmd)
-            await idle()
+    async def run(self):
+        await self.set()
+        await self.read()
+        await super().run()

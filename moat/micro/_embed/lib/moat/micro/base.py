@@ -18,8 +18,8 @@ def _complex(v):
 
 class SysCmd(BaseCmd):
     # system and other low level stuff
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, parent, name):
+        super().__init__(parent, name)
         self.repeats = {}
 
     async def cmd_is_up(self):
@@ -350,7 +350,7 @@ class StdBase(RootCmd):
         self.moat_state = state
         self.cfg = cfg
 
-        self.dis_sys = SysCmd(self)
+        self.dis_sys = SysCmd(self, name="sys")
 
     async def cmd_ping(self, m=None):
         """

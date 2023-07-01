@@ -76,9 +76,7 @@ class WDT:
             self.trigger = self.cfg.get("tt", self.timeout / 2)
         self._ping.set()
 
-    async def run(self, cmd):
-        cmd  # not used
-
+    async def run(self):
         T = getattr(machine, "Timer", None)
         t = None
         while True:

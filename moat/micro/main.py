@@ -26,7 +26,7 @@ class ClientBaseCmd(BaseCmd):
     """
 
     def __init__(self, parent, *, cfg=None):
-        super().__init__(parent)
+        super().__init__(parent, name=None)
         self.cfg = cfg
         self.started = Event()
 

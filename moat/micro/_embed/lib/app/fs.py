@@ -28,8 +28,8 @@ class FsCmd(BaseCmd):
     _fd_last = 0
     _fd_cache = None
 
-    def __init__(self, parent, name, cfg, gcfg):
-        super().__init__(parent)
+    def __init__(self, parent, name, cfg):
+        super().__init__(parent, name=name)
         self._fd_cache = dict()
         self.cfg = cfg
         try:

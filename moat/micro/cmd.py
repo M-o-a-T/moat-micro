@@ -4,9 +4,11 @@ Server side of BaseCmd
 extends BaseCmd to also return loc_* functions
 """
 
-from ._cmd import BaseCmd as _BaseCmd
-from ._cmd import Request, RootCmd  # pylint:disable=unused-import
+from moat.util.broadcast import Broadcaster
 
+from ._cmd import BaseCmd as _BaseCmd
+from ._cmd import RootCmd as _RootCmd
+from ._cmd import Request  # pylint:disable=unused-import
 
 class BaseCmd(_BaseCmd):
     """
@@ -31,3 +33,25 @@ class BaseCmd(_BaseCmd):
         return res
 
     loc__dir = cmd__dir
+
+
+class RootCmd(_RootCmd):
+    """
+    The server-side BaseCmd class maintains a broadcaster for local clients.
+    """
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self._mon = Broadcaster()
+
+    async def monitor(self, qlen=10):
+        """
+        State update iterator. Yields (path,data) tuples.
+
+        @qlen is the length of the broadcaster's queue.
+        """
+        async for msg in self._mon.reader(qlen):
+            yield msg
+
+
+    

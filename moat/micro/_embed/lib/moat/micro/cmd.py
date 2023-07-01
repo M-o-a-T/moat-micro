@@ -24,6 +24,12 @@ unreliable transport will wait for the message to be confirmed. Sending
 may fail.
 """
 
+try:
+    breakpoint
+except NameError:
+    _me="µ"
+else:
+    _me="P"
 
 import sys
 
@@ -71,6 +77,15 @@ class BaseCmd(_Stacked):
 
     _tg: TaskGroup = None
 
+    def __init__(self, parent, name):
+        super().__init__(parent)
+        self.name = name
+        if self.name is None:
+            self.path = ()
+        else:
+            self.path = parent.path+(name,)
+            setattr(parent, "dis_"+name, self)
+
     async def run(self):
         """
         Main loop for this part.
@@ -88,8 +103,6 @@ class BaseCmd(_Stacked):
             await tg.spawn(self.run, _name="run")
 
             for k in dir(self):
-                if not k.startswith('dis_'):
-                    continue
                 v = getattr(self, k)
                 if isinstance(v, BaseCmd):
                     await tg.spawn(v.run_sub, _name="sub:" + k)
@@ -142,21 +155,19 @@ class BaseCmd(_Stacked):
             else:
                 return await c(p)
 
-        if len(action) > 1:
-            try:
-                dis = getattr(self, "dis_" + action[0])
-            except AttributeError:
+        try:
+            dis = getattr(self, "dis_" + action[0])
+        except AttributeError:
+            if len(action) > 1:
                 raise AttributeError(action) from None
-            else:
-                return await dis(action[1:], msg)
-        else:
             return await c(getattr(self, "cmd_" + action[0]))
+        else:
+            return await dis(action[1:], msg)
 
-    async def __call__(self, *a, **k):
-        """
-        Alias for the dispatcher
-        """
-        return await self.dispatch(*a, **k)
+    def __call__(self, *a, **k):
+        return self.dispatch(*a, **k)
+        # not equated because "dispatch" can be overridden
+
 
     async def config_updated(self, cfg):
         """
@@ -270,9 +281,8 @@ class Request(_Stacked):
                 continue
 
             cfg = getattr(gcfg, name, {})
-            cmd = imp(v)(self, name, cfg, gcfg)
+            cmd = imp(v)(self.base, name, cfg=cfg)
             self.apps[name] = cmd
-            setattr(self.base, "dis_" + name, cmd)
 
         # then run them all.
         # For existing apps, tell it to update its configuration.
@@ -281,9 +291,13 @@ class Request(_Stacked):
                 cfg = getattr(gcfg, name, attrdict())
                 await app.config_updated(cfg)
             else:
-                app._req_scope = await tg.spawn(  # pylint: disable=protected-access
-                    app.run, _name="mp_app_" + name
-                )
+                try:
+                    app._req_scope = await tg.spawn(  # pylint: disable=protected-access
+                        app.run, _name="mp_app_" + name
+                    )
+                except TypeError:
+                    print("TE", name, app, file=sys.stderr)
+                    raise
 
         if self._ready is not None:
             self._ready.set()
@@ -433,109 +447,10 @@ class Request(_Stacked):
 class RootCmd(BaseCmd):
     """
     Standard toplevel base implementation.
-
-    Adds commands to set and query broadcasters.
     """
 
     _cfg = None
+    path = ()
 
     def __init__(self, parent):
-        super().__init__(parent)
-        self._s = {}
-        self._q = Queue(20)
-
-    #   @property
-    #   def cfg(self):
-    #       return self._cfg
-    #   @cfg.setter
-    #   def cfg(self, val):
-    #       if not isinstance(val, attrdict):
-    #           breakpoint()
-    #       self._cfg = val
-
-    async def cmd_s(self, o, d):
-        """
-        State update.
-        """
-        b = self._get_br(o)
-        b(d)
-
-    async def cmd_sq(self, o):
-        """
-        State query.
-        """
-        b = self._get_br(o)
-        return await b.read()
-
-    loc_s = cmd_s
-    loc_sq = cmd_sq
-
-    async def run(self):
-        try:
-            await idle()
-        finally:
-
-            def _cls(s):
-                for v in s.values():
-                    if isinstance(v, dict):
-                        _cls(v)
-                    else:
-                        v.close()
-
-            _cls(self._s)
-
-    def _get_br(self, o):
-        s = self._s
-        for x in o[:-1]:
-            try:
-                s = s[x]
-            except KeyError:
-                s = s[x] = {}
-        x = o[-1]
-        try:
-            b = s[x]
-        except KeyError:
-            b = s[x] = RemBroadcaster()
-            Broadcaster.__enter__(b)  # pylint:disable=unnecessary-dunder-call
-        return b
-
-    def watch(self, *o):
-        "return a context to watch a specific broadcast"
-        b = self._get_br(o)
-        return b.reader(1)
-
-    def register(self, obj, *o):
-        "register a source object for a specific broadcast"
-        b = self._get_br(o)
-        if b.obj is not None:
-            raise RuntimeError(f"{b.obj} already registered on {o}")
-        b.obj = obj
-
-        # pylint:disable=protected-access
-        if b._evt is not None:
-            b._evt.set()
-            b._evt = None
-        return b
-
-
-class RemBroadcaster(Broadcaster):
-    "A broadcaster that reads from an object"
-    obj = None
-    _evt = None
-
-    def __repr__(self):
-        return f"{super().__repr__()} o={repr(self.obj)} e={'Y' if self._evt else 'N'}"
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *tb):
-        self.obj = None
-
-    async def read(self):
-        "read data"
-        if self.obj is None:
-            if self._evt is None:
-                self._evt = Event()
-            await self._evt.wait()
-        return await self.obj.read_()
+        super().__init__(parent, name=None)

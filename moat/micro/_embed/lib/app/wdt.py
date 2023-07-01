@@ -34,7 +34,7 @@ class WDTCmd(BaseCmd):
     wdt = None
     timeout = None
 
-    def __init__(self, parent, name, cfg, gcfg):
+    def __init__(self, parent, name, cfg):
         super().__init__(parent)
         self.cfg = cfg
         self._ping = Event()

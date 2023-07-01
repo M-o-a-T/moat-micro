@@ -35,8 +35,8 @@ class ADC(M.ADC):
         self.offset = cfg.get("offset", 0)
         Reader.__init__(self, cfg)
 
-    async def run(self, cmd):
-        await Reader.run(cmd)
+    async def run(self):
+        await Reader.run()
 
     async def read(self):
         c = 0
@@ -64,8 +64,8 @@ class Multiply(Reader):
 
     def __init__(self, cfg, **kw):
         super().__init__(cfg, **kw)
-        self.rdr_u = load_from_cfg(cfg.u)
-        self.rdr_i = load_from_cfg(cfg.u)
+        self.rdr_u = load_from_cfg(self, "u", cfg=cfg.u)
+        self.rdr_i = load_from_cfg(self, "i", cfg=cfg.i)
 
     async def read(self):
         now_u = None

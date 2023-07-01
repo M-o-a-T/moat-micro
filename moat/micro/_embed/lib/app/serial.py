@@ -20,13 +20,13 @@ from moat.micro.proto.stream import AsyncStream
 class Serial:
     max_idle = 100
 
-    def __init__(self, cmd, cfg, gcfg):
+    def __init__(self, cmd, cfg):
         self.cmd = cmd
         self.cfg = cfg
         self.xmit_evt = Event()
         self.w_lock = Lock()
 
-    async def run(self, cmd):
+    async def run(self):
         cfg = self.cfg
         self.ser = AsyncStream(
             M.UART(
@@ -109,9 +109,9 @@ class Serial:
 
 
 class SerialCmd(BaseCmd):
-    def __init__(self, parent, name, cfg, gcfg):
+    def __init__(self, parent, name, cfg):
         super().__init__(parent)
-        self.ser = Serial(self, cfg, gcfg)
+        self.ser = Serial(self, cfg)
         self.name = name
 
     async def run(self):

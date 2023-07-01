@@ -66,7 +66,7 @@ class Pin(sup):
         self.flag.clear()
         return self.pin.value()
 
-    async def run(self, cmd):
+    async def run(self):
         async with self:
             await idle()
 

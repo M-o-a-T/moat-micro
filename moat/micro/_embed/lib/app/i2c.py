@@ -11,7 +11,7 @@ from moat.micro.cmd import BaseCmd
 class Cmd(BaseCmd):
     _bus_cache = None  # c,d > busobj
 
-    def __init__(self, parent, name, cfg, gcfg):
+    def __init__(self, parent, name, cfg):
         super().__init__(parent)
         self._bus_cache = dict()
         self.cfg = cfg
