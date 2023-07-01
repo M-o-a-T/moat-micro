@@ -101,7 +101,6 @@ class MultiplyDict(Reader):
         self.rdr = {}
         for k in self.sub:
             self.rdr[k] = load_from_cfg(self, k, cfg=cfg[k])
-        print("III", id(self), self.sub, self.rdr, file=sys.stderr)
 
     async def read_(self):
         res = {}
