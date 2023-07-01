@@ -294,8 +294,10 @@ class Request(_Stacked):
                 await app.config_updated(cfg)
             else:
                 try:
+                    rs = getattr(app,"run_sub", app.run)
+                    # XXX unconditionally use run_sub?
                     app._req_scope = await tg.spawn(  # pylint: disable=protected-access
-                        app.run, _name="mp_app_" + name
+                        rs, _name="mp_app_" + name
                     )
                 except TypeError:
                     print("TE", name, app, file=sys.stderr)
