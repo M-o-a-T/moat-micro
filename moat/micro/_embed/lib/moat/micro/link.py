@@ -163,8 +163,8 @@ class Listener(Reader):
 
     async def run(self):
         "hook a monitor to the base watcher"
-        breakpoint()
-        await idle()
+        # TODO
+        pass
 
     async def read_(self):
         """
