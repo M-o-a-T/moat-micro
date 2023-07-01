@@ -162,8 +162,7 @@ class Listener(Reader):
             self._dt = cfg.link_age * 1000
 
     async def run(self):
-        "hook a monitor to the base watcher"
-        # TODO
+        "nothing to do here"
         pass
 
     async def read_(self):
