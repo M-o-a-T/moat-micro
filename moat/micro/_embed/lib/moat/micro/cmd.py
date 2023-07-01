@@ -103,6 +103,8 @@ class BaseCmd(_Stacked):
             await tg.spawn(self.run, _name="run")
 
             for k in dir(self):
+                if not k.startswith("dis_"):
+                    continue
                 v = getattr(self, k)
                 if isinstance(v, BaseCmd):
                     await tg.spawn(v.run_sub, _name="sub:" + k)
