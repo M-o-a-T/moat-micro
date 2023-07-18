@@ -71,7 +71,8 @@ class ADC(Reader):
     - seed: used to reproduce the random sequence.
     """
 
-    def __init__(self, cfg, **kw):
+    def __init__(self, parent, name, cfg, **kw):
+        super().__init__(parent, name, cfg)
         self.min = cfg.min if "min" in cfg else 0
         self.max = cfg.max if "max" in cfg else 1
         self.border = cfg.border if "border" in cfg else 2
