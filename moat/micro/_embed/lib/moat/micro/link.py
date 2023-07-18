@@ -10,6 +10,7 @@ from moat.util.compat import (  # pylint: disable=redefined-builtin,no-name-in-m
     TimeoutError,
     every_ms,
     idle,
+    sleep_ms,
     ticks_ms,
     ticks_diff,
     wait_for_ms,
