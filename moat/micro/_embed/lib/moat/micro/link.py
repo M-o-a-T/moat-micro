@@ -24,7 +24,7 @@ class Reader(BaseCmd):
     forwards the result to the remote side.
 
     Config::
-        - bg.send: time between messages
+        - bg.age: time between `read_()` calls
         - bg.abs: absolute difference required to trigger sending
         - bg.rel: relative difference
         - t: access the hardware at most every T msec
@@ -64,9 +64,9 @@ class Reader(BaseCmd):
             # take local read from cache if not older than T
             self._d_tm = cfg.get("t", 0)
 
-    async def cmd(self):
+    async def cmd(self, w=False):
         """read data"""
-        return await self.read_()
+        return await self.read(wait=w)
 
 
     async def run(self):
@@ -172,9 +172,9 @@ class Listener(Reader):
         """
         return await self.request.send(self.path)
 
-    async def cmd(self, d=None):
+    async def cmd(self, d=None, w=False):
         if d is None:  # read
-            return await self.read_()
+            return await self.read_(wait=w)
         else:  # set data
             self._rd = d
             self._t = ticks_ms()
