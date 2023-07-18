@@ -43,19 +43,23 @@ send\_all / receive\_some.
 
 ## MoaT
 
-As per XKCD 927, MoaT uses a new scheme.
+As per XKCD 927, MoaT uses a new scheme – (a) for shorter function names,
+(b) to avoid duck-typing.
 
-Byte and object streams use send/recv. Byte streams can use "recv\_to" as the
-readinto equivalent.
+Byte and object streams use send/recv. Byte streams use "recv\_to" as the
+`readinto` equivalent.
 
-The distinction between bytes and objects 
+There's no distinction between bytes and objects when sending; byte
+streams have a `recv_to` method and a `length` argument to `recv`, while
+object streams have neither.
 
 Streams have parent/child links. The parent is the next lower level. On the
-top there's a "Request" object which serializes "send" requests, and a "StdBase"
-that dispatches incoming commands to multiple subsystems.
+top there is a "Request" object which serializes "send" requests, and on
+top of that there's a "StdBase" object that dispatches incoming commands to
+multiple subsystems.
 
 Streams have a "run" method. The system sets up a stream stack and places
 subsystems on top of it as per the configuration data. Then it starts
 the stack's bottom "run", which sets up itself and then runs the next "run"
-up. `StdBase.run` then starts the subsystems.
+up. `StdBase.run` starts the subsystems.
 
