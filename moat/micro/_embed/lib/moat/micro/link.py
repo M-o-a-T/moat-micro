@@ -45,18 +45,20 @@ class Reader(BaseCmd):
     def __init__(self, parent, name, cfg, **_kw):
         super().__init__(parent, name)
         self.cfg = cfg
+        tx = cfg.get("bg", None)
         if isinstance(self, Listener):
-            self._d_tm = cfg.get("tr", 0)
+            self._d_tm = tx.get("read", 0) if tx else 0
             return
 
-        tx = cfg.get("bg", None)
         if tx is not None:
+            # directly return if data is not stale
+            self._d_tm = tx.get("age", 0) if tx else 0
             # send to other side every N msec
-            self._t_send = cfg.get("send", None)
+            self._t_send = tx.get("loop", None)
             # don't send if absolute delta is < ABS
-            self._d_abs = cfg.get("abs", None)
+            self._d_abs = tx.get("abs", None)
             # don't send if relative delta is < REL.
-            r = cfg.get("rel", None)
+            r = tx.get("rel", None)
             if r is not None:
                 r = 1+r  # r=0.1: 10% more
             self._d_rel = r
