@@ -31,9 +31,9 @@ async def test_ary(tmp_path):
         assert False is await d.send("a", 0, "r")
         assert True is await d.send("a", 1, "r")
         assert False is await d.send("a", 2, "r")
-        assert [False, True, False] == await a.all("r")
-        await a.all("w", d={"v": True})
-        assert [True, True, True] == await a.all("r")
+        assert [False, True, False] == await a._all("r")
+        await a._all("w", d={"v": True})
+        assert [True, True, True] == await a._all("r")
 
         cfg = await d.send("a", 1, "_cfg")
         assert cfg["pin"] == 2

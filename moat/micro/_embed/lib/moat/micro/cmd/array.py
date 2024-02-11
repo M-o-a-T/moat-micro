@@ -135,7 +135,7 @@ class ArrayCmd(BaseSuperCmd):
         res["na"] = len(self.apps)
         return res
 
-    async def cmd_all(self, *a, d=None, s=None, e=None):
+    async def cmd__all(self, *a, d=None, s=None, e=None):
         """
         Call all sub-apps and collect the result.
         """
